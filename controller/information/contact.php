@@ -218,8 +218,10 @@ class ControllerInformationContact extends Controller {
 
 		$this->response->setOutput($this->load->view('common/success', $data));
 	}
+/*
+ * START Добавлен контроллер, который отправляет письмо на email администратора
+ */
     public function sendMail(){
-
         if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
             $mail = new Mail();
             $mail->protocol = $this->config->get('config_mail_protocol');
@@ -238,25 +240,14 @@ class ControllerInformationContact extends Controller {
             $mail->setText($this->request->post['callbackname']);
             $mail->send();
 
-            $this->response->redirect($this->url->link('information/contact/successMail'));
+            $this->response->redirect($this->url->link('information/contact/success'));
         } else {
             echo "Error!";
         }
-       /* if(isset($_POST["callbackname"]) && isset($_POST["callbacktel"])){
-            $name = $_POST["callbackname"];
-            $phone = $_POST["callbacktel"];
-            $message = $name." ".$phone;
-            $mail = $this->config->get('config_email');
-            if(mail($mail, 'Test', $message)){
-                echo "Email отправлен";
-                echo $mail;
-            } else {
-                echo "Error!";
-            }
-        }*/
-    }
 
-    public function successMail() {
-        echo "It`s ok";
     }
+/**
+ * END
+ */
 }
+

@@ -153,7 +153,7 @@
             url: 'index.php?route=information/contact/sendMail',
             data: msg,
             success: function(data){
-                alert("Прибыли данные: " + data);
+                window.location.replace('index.php?route=information/contact/success');
             },
             error: function(xhr){
                 alert('An error occurred.' + xhr.response);
