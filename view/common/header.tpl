@@ -133,33 +133,37 @@
 <?php } ?>
 
 <!--STAR добавила форму 'заказать звонок' и скрипт - обработка асинхронного запроса-->
+<!-- START поменяла регулярное выражение-->
 <div id="callback" class="modal">
-  <form method="post" class="ajax-form">
+  <form method="post" class="ajax-form" action="index.php?route=information/contact/sendMail">
     <h3 class="title modal-title"><?php echo $modal_request_call; ?></h3>
     <div class="form-group">
       <input type="text" name="callbackname" id="callbackname" class="input input_modal" placeholder="<?php echo $modal_name_placeholder; ?>" required>
-      <input type="text" name="callbacktel" id="callbacktel" class="input input_modal" placeholder="<?php echo $modal_tel_placeholder; ?>*" required pattern="[0-9_-]{10}" title="Формат ХХХ ХХ ХХ ХХХ">
+      <input type="text" name="callbacktel" id="callbacktel" class="input input_modal" placeholder="<?php echo $modal_tel_placeholder; ?>*" required pattern="^((\+3)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$" title="Формат ХХХ ХХ ХХ ХХХ">
     </div>
     <p class="modal-text_small"><?php echo $modal_text_small; ?></p>
     <input type="submit" name="callbackbtn" id = "callbackbtn" class="btn btn_act btn_submit" value="<?php echo $modal_btn_send; ?>">
   </form>
 </div>
 <script>
-    $('.ajax-form').on('submit',function(){
+   /* $('.ajax-form').on('submit',function(){
         event.preventDefault();
         var msg = $(this).serialize();
         $.ajax({
             type: 'POST',
             url: 'index.php?route=information/contact/sendMail',
-            data: msg,
+            datatype: json,
+            data: data,
             success: function(data){
-                window.location.replace('index.php?route=information/contact/success');
+                if(data['error']){
+                    alert(data['error']);
+                }
             },
             error: function(xhr){
                 alert('An error occurred.' + xhr.response);
             }
         });
-    })
+    })*/
 </script>
 <!--END добавила форму заказать звонок и скрипт - обработка асинхронного запроса-->
 

@@ -237,17 +237,24 @@ class ControllerInformationContact extends Controller {
             $mail->setReplyTo($this->request->post['callbacktel']);
             $mail->setSender(html_entity_decode($this->request->post['callbackname'], ENT_QUOTES, 'UTF-8'));
             $mail->setSubject(html_entity_decode(sprintf($this->language->get('email_subject'), $this->request->post['callbackname']), ENT_QUOTES, 'UTF-8'));
-            $mail->setText($this->request->post['callbackname']);
+            /**
+             * START Добавила текст сообщения
+             */
+            $textMessage = "Заказ на обратный звонок. Пользователь: ".$this->request->post['callbackname'].", номер телефона: ".$this->request->post['callbackname'];
+            $mail->setText($textMessage);
             $mail->send();
-
+            /**
+             * END
+             */
             $this->response->redirect($this->url->link('information/contact/success'));
         } else {
             echo "Error!";
         }
 
     }
-/**
- * END
- */
+
+    public function successMail() {
+        echo "Ваша заявка принята, ожидайте звонка!)";
+    }
 }
 
