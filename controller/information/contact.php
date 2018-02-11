@@ -240,7 +240,7 @@ class ControllerInformationContact extends Controller {
             /**
              * START Добавила текст сообщения
              */
-            $textMessage = "Заказ на обратный звонок. Пользователь: ".$this->request->post['callbackname'].", номер телефона: ".$this->request->post['callbackname'];
+            $textMessage = "Заказ на обратный звонок. Пользователь: ".$this->request->post['callbackname'].", номер телефона: ".$this->request->post['callbacktel'];
             $mail->setText($textMessage);
             $mail->send();
             /**

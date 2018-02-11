@@ -41,7 +41,6 @@
   <?php } ?>
   <?php foreach ($scripts as $script) { ?>
   <script src="<?php echo $script; ?>" type="text/javascript"></script>
-  <script src="jquery-3.3.1.min.js" type="text/javascript"></script>
   <?php } ?>
   <?php foreach ($analytics as $analytic) { ?>
   <?php echo $analytic; ?>
@@ -132,8 +131,6 @@
 </div>
 <?php } ?>
 
-<!--STAR добавила форму 'заказать звонок' и скрипт - обработка асинхронного запроса-->
-<!-- START поменяла регулярное выражение-->
 <div id="callback" class="modal">
   <form method="post" class="ajax-form" action="index.php?route=information/contact/sendMail">
     <h3 class="title modal-title"><?php echo $modal_request_call; ?></h3>
@@ -145,25 +142,295 @@
     <input type="submit" name="callbackbtn" id = "callbackbtn" class="btn btn_act btn_submit" value="<?php echo $modal_btn_send; ?>">
   </form>
 </div>
+
+<!----- START форма отправки заказаза, добавила вариант доставки "Другой вариант"---------------------->
+<!-- order  -->
+<div id="order" class="">
+  <h3 class="title modal-title">Оформление заказа</h3>
+  <div class="form-order-wrap">
+    <form id="order-info" action="" method="post" class="ajax-form">
+
+      <!-- name and phone -->
+      <div class="order-step">
+        <span class="order-step-title">1. Ваши данные</span>
+        <div class="order-step-row">
+          <div class="row min">
+            <div class="col-sm-2">
+              <div class="order-step-label">Ваше ФИО*</div>
+            </div>
+            <div class="col-sm-10">
+              <div class="row min">
+                <div class="col-sm-4">
+                  <input type="text" name="surmane" class="input input_order" placeholder="Фамилия" required>
+                </div>
+                <div class="col-sm-4">
+                  <input type="text" name="name" class="input input_order" placeholder="Имя" required>
+                </div>
+                <div class="col-sm-4">
+                  <input type="text" name="fathername" class="input input_order" placeholder="Отчество" required>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="order-step-row">
+          <div class="row min">
+            <div class="col-sm-2">
+              <div class="order-step-label">Телефон*</div>
+            </div>
+            <div class="col-sm-10">
+              <input type="text" name="phone" class="input input_order" placeholder="" required>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- delivery -->
+      <div class="order-step">
+        <span class="order-step-title">2. Доставка</span>
+        <p class="modal-text">Бесплатная доставка Новой Почтой в течении 1-3 дней</p>
+        <div class="order-list-type">
+          <div class="row min">
+            <div class="col-sm-2"></div>
+            <div class="col-sm10">
+              <ul class="check-radio">
+                <li>
+                  <input type="radio" id="himself" value="himself" name="delivery" class="input_radio" checked>
+                  <label for="himself" class="input_label">Самовывоз</label>
+                </li>
+                <li>
+                  <input type="radio" id="np-warehouse" value="np-warehouse" name="delivery" class="input_radio">
+                  <label for="np-warehouse" class="input_label">Новая Почта - Склад</label>
+                </li>
+                <li>
+                  <input type="radio" id="np-corier" value="np-corier" name="delivery" class="input_radio">
+                  <label for="np-corier" class="input_label">Новая Почта - Курьер</label>
+                </li>
+                <!-- START -->
+                <li>
+                  <input type="radio" id="another-warehouse" value="another-warehouse" name="delivery" class="input_radio">
+                  <label for="another-warehouse" class="input_label">Другой вариант</label>
+                </li>
+                <!-- END-->
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- nova poshta - warehouse -->
+        <div id="warehouse-info" class="order-delivery-details">
+          <div class="order-step-row">
+            <div class="row min">
+              <div class="col-sm-2">
+                <div class="order-step-label">Область</div>
+              </div>
+              <div class="col-sm-10">
+                <input type="text" name="region" class="input input_order" placeholder="" required>
+              </div>
+            </div>
+          </div>
+          <div class="order-step-row">
+            <div class="row min">
+              <div class="col-sm-2">
+                <div class="order-step-label">Город</div>
+              </div>
+              <div class="col-sm-10">
+                <input type="text" name="city" class="input input_order" placeholder="" required>
+              </div>
+            </div>
+          </div>
+          <div class="order-step-row">
+            <div class="row min">
+              <div class="col-sm-2">
+                <div class="order-step-label">№ склада*</div>
+              </div>
+              <div class="col-sm-10">
+                <div class="row min">
+                  <div class="col-sm-6">
+                    <input type="text" name="warehouse" class="input input_order" placeholder="" required>
+                    <span class="modal-text_small">* - укажите грузовое отделение</span>
+                  </div>
+                  <div class="col-sm-6">
+                    <a href="#" class="link order-warehouse-map">Карта складов</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- START параметры другого варианта-->
+        <!-- another-warehouse -->
+        <div id="other-warehouse-info" class="order-delivery-details">
+          <div class="order-step-row">
+            <div class="row min">
+              <div class="col-sm-2">
+                <div class="order-step-label">Город</div>
+              </div>
+              <div class="col-sm-10">
+                <input type="text" name="city" class="input input_order" placeholder="" required>
+              </div>
+            </div>
+          </div>
+          <div class="order-step-row">
+            <div class="row min">
+              <div class="col-sm-2">
+                <div class="order-step-label">№ склада*</div>
+              </div>
+              <div class="col-sm-10">
+                <input type="text" name="warehouse" class="input input_order" placeholder="" required>
+                <span class="modal-text_small">* - укажите грузовое отделение</span>
+              </div>
+            </div>
+          </div>
+          <div class="order-step-row">
+            <div class="row min">
+              <div class="col-sm-2">
+                <div class="order-step-label">Улица</div>
+              </div>
+              <div class="col-sm-10">
+                <input type="text" name="street" class="input input_order" placeholder="" required>
+              </div>
+            </div>
+          </div>
+          <div class="order-step-row">
+            <div class="row min">
+              <div class="col-sm-2">
+                <div class="order-step-label">Дом</div>
+              </div>
+              <div class="col-sm-4">
+                <input type="text" name="house" class="input input_order" placeholder="" required>
+              </div>
+              <div class="col-sm-2">
+                <div class="order-step-label">Квартира</div>
+              </div>
+              <div class="col-sm-4">
+                <input type="text" name="room" class="input input_order" placeholder="">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- END параметры другого варианта-->
+
+      <!-- nova poshta - corier -->
+      <div id="warehouse-corier" class="order-delivery-details">
+        <div class="order-step-row">
+          <div class="row min">
+            <div class="col-sm-2">
+              <div class="order-step-label">Город</div>
+            </div>
+            <div class="col-sm-10">
+              <input type="text" name="city" class="input input_order" placeholder="" required>
+            </div>
+          </div>
+        </div>
+        <div class="order-step-row">
+          <div class="row min">
+            <div class="col-sm-2">
+              <div class="order-step-label">Улица</div>
+            </div>
+            <div class="col-sm-10">
+              <input type="text" name="street" class="input input_order" placeholder="" required>
+            </div>
+          </div>
+        </div>
+        <div class="order-step-row">
+          <div class="row min">
+            <div class="col-sm-2">
+              <div class="order-step-label">Дом</div>
+            </div>
+            <div class="col-sm-4">
+              <input type="text" name="house" class="input input_order" placeholder="" required>
+            </div>
+            <div class="col-sm-2">
+              <div class="order-step-label">Квартира</div>
+            </div>
+            <div class="col-sm-4">
+              <input type="text" name="room" class="input input_order" placeholder="" required>
+            </div>
+          </div>
+        </div>
+        <div class="order-step-row">
+          <div class="row min">
+            <div class="col-sm-2">
+              <div class="order-step-label">Подъезд</div>
+            </div>
+            <div class="col-sm-4">
+              <input type="text" name="entrance" class="input input_order" placeholder="" required>
+            </div>
+            <div class="col-sm-2">
+              <div class="order-step-label">Этаж</div>
+            </div>
+            <div class="col-sm-4">
+              <input type="text" name="floor" class="input input_order" placeholder="" required>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- payment -->
+      <div class="order-step">
+        <span class="order-step-title">3. Метод оплаты</span>
+        <div class="order-list-type">
+          <div class="row min">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-10">
+              <ul class="check-radio">
+                <li>
+                  <input type="radio" id="paybefore" value="paybefore" name="payment" class="input_radio" checked>
+                  <label for="paybefore" class="input_label">Полная предоплата</label>
+                </li>
+                <li>
+                  <input type="radio" id="cod" value="cod" name="payment" class="input_radio">
+                  <label for="cod" class="input_label">Наложеный платеж<span class="input_label-info">( 2% от суммы товара )</span></label>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- add comment -->
+      <div class="order-step">
+        <div class="order-comment">
+          <a href="javascript:void(0);" class="link order-comment-link">Добавить комментарий к заказу</a>
+          <textarea id="ordermssg" placeholder="Сообщение" name="comment" class="input input_area"></textarea>
+        </div>
+      </div>
+
+      <!-- order button -->
+      <div class="order-btn">
+        <!--BUTTON ORDER -->
+        <a href="#ordersuccess" class="btn btn_act popup-btn btn-add-order" >Оформить заказ</a>
+        <input type="submit" value="Оформить">
+      </div>
+
+    </form>
+  </div>
+</div>
+
+
+<!------- END--------->
+<!------- START форма отправки запроса без перезагрузки страницы--------->
+</body>
+</html>
+
 <script>
-   /* $('.ajax-form').on('submit',function(){
-        event.preventDefault();
+    $('.ajax-form').on('submit',function(){
         var msg = $(this).serialize();
+        var d;
         $.ajax({
             type: 'POST',
-            url: 'index.php?route=information/contact/sendMail',
-            datatype: json,
-            data: data,
+            url: 'index.php?route=checkout/cart/sendMail',
+            data: msg,
             success: function(data){
-                if(data['error']){
-                    alert(data['error']);
-                }
+                alert(data);
             },
             error: function(xhr){
                 alert('An error occurred.' + xhr.response);
             }
         });
-    })*/
+    });
+
 </script>
-<!--END добавила форму заказать звонок и скрипт - обработка асинхронного запроса-->
+<!------- END--------->
 
