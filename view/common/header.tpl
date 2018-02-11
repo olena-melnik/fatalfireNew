@@ -415,6 +415,7 @@
 </html>
 
 <script>
+
     $('.ajax-form').on('submit',function(){
         var msg = $(this).serialize();
         var d;

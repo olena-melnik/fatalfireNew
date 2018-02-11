@@ -510,9 +510,35 @@ class ControllerCheckoutCart extends Controller {
             foreach ($product as $key=>$val){
                 if(gettype($val) != 'array') {
                     $productInCart .= "<td>" . $key . "</td><td>" . $val . "</td>";
+                } else {
+                    foreach ($val as $keyOpt => $item){
+                        if(gettype($item) != 'array') {
+                            $productInCart .= "<td>" . $keyOpt . "</td><td>" . $item . "</td>";
+                        } else {
+                            foreach ($item as $keyOpt2 => $item2){
+                                $productInCart .= "<td>" . $keyOpt2 . "</td><td>" . $item2 . "</td>";
+                            }
+                        }
+
+                    }
                 }
             }
             $productInCart .= "</tr>";
+        }
+
+        // echo $productInCart;
+
+        /**
+        foreach ($products as $product){
+        $productInCart .= "<tr>";
+        $productInCart .= "<td>".$product['product_id']."</td>";
+        $productInCart .= "<td>".$product['name']."</td>";
+        $productInCart .= "<td>".$product['model']."</td>";
+        //$productInCart .= "<td>".$product['option']."</td>";
+        $productInCart .= "<td>".$product['quantity']."</td>";
+        //$productInCart .= "<td>".$product['stoke']."</td>";
+        $productInCart .= "<td>".$product['price']."</td>";
+        $productInCart .= "</tr>";
         }
 
         /**
@@ -604,10 +630,10 @@ class ControllerCheckoutCart extends Controller {
             <body>
             <h3>Вам пришел новый заказ</h3>
                 <p>
-                    Заказчик: $name;
-                    Телефон: $phone;
-                    Доставка: $delivery;
-                    Метод оплати: $payment;
+                    Заказчик: $name;<br>
+                    Телефон: $phone;<br>
+                    Доставка: $delivery;<br>
+                    Метод оплати: $payment;<br>
                     Параметри відправки:
                     $parametrsOrder;
                     <table>
@@ -634,7 +660,6 @@ class ControllerCheckoutCart extends Controller {
             $mail->setSubject(html_entity_decode(sprintf($this->language->get('email_subject'), $heardLetter), ENT_QUOTES, 'UTF-8'));
             $mail->setText($letter);
             $mail->send();
-            echo $letter;
         } else {
             echo "Error";
         }
