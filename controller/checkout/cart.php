@@ -660,10 +660,16 @@ class ControllerCheckoutCart extends Controller {
             $mail->setSubject(html_entity_decode(sprintf($this->language->get('email_subject'), $heardLetter), ENT_QUOTES, 'UTF-8'));
             $mail->setText($letter);
             $mail->send();
+
+            $this->response->redirect($this->url->link('information/contact/success'));
         } else {
             echo "Error";
         }
 
+    }
+
+    public function successMail() {
+        echo "Ваша заявка принята, ожидайте звонка!)";
     }
     /**
      * END
