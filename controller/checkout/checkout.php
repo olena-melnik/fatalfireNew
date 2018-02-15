@@ -272,6 +272,11 @@ class ControllerCheckoutCheckout extends Controller {
             $parametrsOrder.= "Регіон: ".$region."<br>";
         }
 
+        if(isset($this->request->post['name-delivery'])){
+            $nameDelivery = $this->request->post['name-delivery'];
+            $parametrsOrder.= "Регіон: ".$nameDelivery."<br>";
+        }
+
         if(isset($this->request->post['warehouse'])){
             $warehouse = $this->request->post['warehouse'];
             $parametrsOrder.= "№ склада: ".$warehouse."<br>";
