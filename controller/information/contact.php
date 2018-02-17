@@ -218,9 +218,7 @@ class ControllerInformationContact extends Controller {
 
 		$this->response->setOutput($this->load->view('common/success', $data));
 	}
-/*
- * START Добавлен контроллер, который отправляет письмо на email администратора
- */
+
     public function sendMail(){
         if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
             $mail = new Mail();
@@ -237,15 +235,11 @@ class ControllerInformationContact extends Controller {
             $mail->setReplyTo($this->request->post['callbacktel']);
             $mail->setSender(html_entity_decode($this->request->post['callbackname'], ENT_QUOTES, 'UTF-8'));
             $mail->setSubject(html_entity_decode(sprintf($this->language->get('email_subject'), $this->request->post['callbackname']), ENT_QUOTES, 'UTF-8'));
-            /**
-             * START Добавила текст сообщения
-             */
-            $textMessage = "Заказ на обратный звонок. Пользователь: ".$this->request->post['callbackname'].", номер телефона: ".$this->request->post['callbacktel'];
+
+            $textMessage = "Заказ на обратный звонок. Пользователь: ".$this->request->post['callbackname'].", номер телефона: ".$this->request->post['callbackname'];
             $mail->setText($textMessage);
             $mail->send();
-            /**
-             * END
-             */
+
             $this->response->redirect($this->url->link('information/contact/success'));
         } else {
             echo "Error!";
@@ -253,8 +247,35 @@ class ControllerInformationContact extends Controller {
 
     }
 
-    public function successMail() {
-        echo "Ваша заявка принята, ожидайте звонка!)";
+    /**
+     * START
+     */
+    public function newSubscription() {
+        if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
+            $mail = new Mail();
+            $mail->protocol = $this->config->get('config_mail_protocol');
+            $mail->parameter = $this->config->get('config_mail_parameter');
+            $mail->smtp_hostname = $this->config->get('config_mail_smtp_hostname');
+            $mail->smtp_username = $this->config->get('config_mail_smtp_username');
+            $mail->smtp_password = html_entity_decode($this->config->get('config_mail_smtp_password'), ENT_QUOTES, 'UTF-8');
+            $mail->smtp_port = $this->config->get('config_mail_smtp_port');
+            $mail->smtp_timeout = $this->config->get('config_mail_smtp_timeout');
+
+            $mail->setTo($this->config->get('config_email'));
+            $mail->setFrom($this->config->get('config_email'));
+            $mail->setReplyTo($this->request->post['email']);
+            $mail->setSender(html_entity_decode('Подписка', ENT_QUOTES, 'UTF-8'));
+            $mail->setSubject(html_entity_decode(sprintf($this->language->get('email_subject'), $this->request->post['email']), ENT_QUOTES, 'UTF-8'));
+            $textMessage = "Новая подписка на рассылку. E-mail пользователя: ".$this->request->post['email'];
+            $mail->setText($textMessage);
+            $mail->send();
+                       $this->response->redirect($this->url->link('information/contact/success'));
+        } else {
+            echo "Error!";
+        }
     }
+    /**
+     * END
+     */
 }
 
