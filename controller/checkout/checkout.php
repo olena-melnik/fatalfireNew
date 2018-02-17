@@ -368,9 +368,12 @@ class ControllerCheckoutCheckout extends Controller {
             $room = $this->request->post['room_ow'];
             $parametrsOrder.= "Квартира: ".$room."<br>";
         }*/
-
+        /**
+         * STARTNEW
+         */
+        $comment = '';
         if(isset($this->request->post['comment']) && $this->request->post['comment'] != ''){
-            $comment = $this->request->post['comment'];
+            $comment = "Коментарій до заказу:".$this->request->post['comment'];
         }
 
         $heardLetter = "Заказ товара";
@@ -400,11 +403,13 @@ class ControllerCheckoutCheckout extends Controller {
                     </tr>
                         $productInCart
                     </table>
-                    Коментарій до заказу: $comment;
+                     $comment;
                     </p>
                     </body>
                     </html>";
-
+        /**
+         * ENDNEW
+         */
         if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
             $mail = new Mail();
             $mail->protocol = $this->config->get('config_mail_protocol');
@@ -422,6 +427,16 @@ class ControllerCheckoutCheckout extends Controller {
             $mail->setSubject(html_entity_decode(sprintf($this->language->get('email_subject'), $heardLetter), ENT_QUOTES, 'UTF-8'));
             $mail->setText($letter);
             $mail->send();
+            /**
+             * STARTNEW
+             */
+            foreach ($products as $product) {
+                $this->cart->remove($product['cart_id']);
+            }
+            /**
+             * ENDNEW
+             */
+            //echo $letter;
             $this->response->redirect($this->url->link('information/contact/success'));
         } else {
             echo "Error";
