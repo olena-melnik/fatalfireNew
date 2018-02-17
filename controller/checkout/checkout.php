@@ -189,45 +189,29 @@ class ControllerCheckoutCheckout extends Controller {
      * START функция, которая формирует и отправляет письмо с заказом
      */
     public function sendMail(){
+
         $products = $this->cart->getProducts();
         $productInCart = '';
-        /*foreach ($products as $product){
-            $productInCart .= "<tr>";
-            foreach ($product as $key=>$val){
-                if(gettype($val) != 'array') {
-                    $productInCart .= "<td>" . $key . "</td><td>" . $val . "</td>";
-                } else {
-                    foreach ($val as $keyOpt => $item){
-                        if(gettype($item) != 'array') {
-                            $productInCart .= "<td>" . $keyOpt . "</td><td>" . $item . "</td>";
-                        } else {
-                            foreach ($item as $keyOpt2 => $item2){
-                                $productInCart .= "<td>" . $keyOpt2 . "</td><td>" . $item2 . "</td>";
-                            }
-                        }
-
-                    }
-                }
-            }
-            $productInCart .= "</tr>";
-        }*/
-
-        // echo $productInCart;
-
         foreach ($products as $product){
-            $productInCart.= "<tr>";
-            $productInCart.= "<td>".$product['product_id']."</td>";
-            $productInCart.= "<td>".$product['name']."</td>";
-            $productInCart.= "<td>".$product['model']."</td>";
-            $productInCart.= "<td>".$product['price']."</td>";
-            $productInCart.= "<td>".($product['price']*120/100)."</td>";
-            $productInCart.= "<td>".$product['quantity']."</td>";
+            $productInCart.= "Код товару: ".$product['product_id']."; 
+            ";
+            $productInCart.= "Назва товару: ".$product['name']."; 
+            ";
+            $productInCart.= "Модель: ".$product['model']."; 
+            ";
+            $productInCart.= "Ціна без НДС, грн: ".$product['price']."; 
+            ";
+            $productInCart.= "Ціна: ".($product['price']*120/100)."; 
+            ";
+            $productInCart.= "Кількість: ".$product['quantity']."; 
+            ";
             foreach($product['option'] as $param){
-                foreach($param as $val){
-                    $productInCart.= "<td>".$val."</td>";
+                foreach($param as $key=>$val){
+                        $productInCart .= "<td>" . $key . "=>" . $val . "</td>";
                 }
             }
-            $productInCart.= "</tr>";
+            $productInCart.= "
+            ";
         }
 
         /**
@@ -239,11 +223,12 @@ class ControllerCheckoutCheckout extends Controller {
         }
         //Номер телефона заказчика
         $phone = $this->request->post['phone'];
-
+        $parametrsOrder = 'Параметри відправки:';
         //Способ доставки
         switch ($this->request->post['delivery']){
             case 'himself':
                 $delivery = "Самовывоз";
+                $parametrsOrder = '';
                 break;
             case 'np-warehouse':
                 $delivery = "Новая почта - Склад";
@@ -269,7 +254,7 @@ class ControllerCheckoutCheckout extends Controller {
         /**
          * END обязательные параметры
          */
-        $parametrsOrder = '';
+
         /**
          * Функция, проверяющая наличие параметра
          * @param $param
@@ -278,11 +263,11 @@ class ControllerCheckoutCheckout extends Controller {
          */
         function issetNotNull ($param, $text){
             if(isset($param) && $param != ''){
-                return "$text: ".$param."<br>";
+                return "$text: ".$param."; 
+                ";
             }
             return '';
         }
-
         /**
          * Нова пошта склад
          */
@@ -377,36 +362,17 @@ class ControllerCheckoutCheckout extends Controller {
         }
 
         $heardLetter = "Заказ товара";
-        $letter =  "    
-            <html>
-            <head>
-                <title>Заказ товара</title>
-            </head>
-            <body>
-            <h3>Вам пришел новый заказ</h3>
-                <p>
-                    Заказчик: $name;<br>
-                    Телефон: $phone;<br>
-                    Доставка: $delivery;<br>
-                    Метод оплати: $payment;<br>
-                    Параметри відправки:<br>
-                    $parametrsOrder
-                    <table>
-                    <tr>
-                    <td>Код товару</td>
-                    <td>Назва товару</td>
-                    <td>Модель</td>
-                    <td>Ціна без НДС, грн</td>
-                    <td>Ціна з НДС, грн</td>
-                    <td>Кількість</td>
-                    <td>Параметри</td>
-                    </tr>
-                        $productInCart
-                    </table>
-                     $comment;
-                    </p>
-                    </body>
-                    </html>";
+        $letter =  " <pre>   
+            Вам пришел новый заказ
+            
+            Заказчик: $name;
+            Телефон: $phone;
+            Доставка: $delivery;
+            Метод оплати: $payment;
+            $parametrsOrder
+            $productInCart
+            $comment
+                     </pre>";
         /**
          * ENDNEW
          */
@@ -436,7 +402,6 @@ class ControllerCheckoutCheckout extends Controller {
             /**
              * ENDNEW
              */
-            //echo $letter;
             $this->response->redirect($this->url->link('information/contact/success'));
         } else {
             echo "Error";
