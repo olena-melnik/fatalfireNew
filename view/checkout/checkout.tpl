@@ -179,7 +179,7 @@
                 <div class="order-step-label"><?php echo $form_delivery_city; ?></div>
               </div>
               <div class="col-sm-10">
-                <input type="text" name="city" class="input input_order" placeholder="" >
+                <input type="text" name="city_np" class="input input_order" placeholder="" >
               </div>
             </div>
           </div>
@@ -191,7 +191,7 @@
               <div class="col-sm-10">
                 <div class="row min">
                   <div class="col-sm-6">
-                    <input type="text" name="warehouse" class="input input_order" placeholder="" >
+                    <input type="text" name="warehouse_np" class="input input_order" placeholder="" >
                     <span class="modal-text_small">* - <?php echo $form_delivery_numb_warehouse_text; ?></span>
                   </div>
                   <div class="col-sm-6">
@@ -211,7 +211,7 @@
                 <div class="order-step-label"><?php echo $form_delivery_city; ?></div>
               </div>
               <div class="col-sm-10">
-                <input type="text" name="city" class="input input_order" placeholder="" >
+                <input type="text" name="city_ow" class="input input_order" placeholder="" >
               </div>
             </div>
           </div>
@@ -230,7 +230,7 @@
                 <div class="order-step-label"><?php echo $form_delivery_numb_warehouse; ?>*</div>
               </div>
               <div class="col-sm-10">
-                <input type="text" name="warehouse" class="input input_order" placeholder="" >
+                <input type="text" name="warehouse_ow" class="input input_order" placeholder="" >
                 <span class="modal-text_small">* - <?php echo $form_delivery_numb_warehouse_text; ?></span>
               </div>
             </div>
@@ -241,7 +241,7 @@
                 <div class="order-step-label"><?php echo $form_delivery_street; ?></div>
               </div>
               <div class="col-sm-10">
-                <input type="text" name="street" class="input input_order" placeholder="" >
+                <input type="text" name="street_ow" class="input input_order" placeholder="" >
               </div>
             </div>
           </div>
@@ -251,13 +251,13 @@
                 <div class="order-step-label"><?php echo $form_delivery_house; ?></div>
               </div>
               <div class="col-sm-4">
-                <input type="text" name="house" class="input input_order" placeholder="" >
+                <input type="text" name="house_ow" class="input input_order" placeholder="" >
               </div>
               <div class="col-sm-2">
                 <div class="order-step-label"><?php echo $form_delivery_room; ?></div>
               </div>
               <div class="col-sm-4">
-                <input type="text" name="room" class="input input_order" placeholder="">
+                <input type="text" name="room_ow" class="input input_order" placeholder="">
               </div>
             </div>
           </div>

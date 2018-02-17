@@ -191,7 +191,7 @@ class ControllerCheckoutCheckout extends Controller {
     public function sendMail(){
         $products = $this->cart->getProducts();
         $productInCart = '';
-        foreach ($products as $product){
+        /*foreach ($products as $product){
             $productInCart .= "<tr>";
             foreach ($product as $key=>$val){
                 if(gettype($val) != 'array') {
@@ -210,21 +210,24 @@ class ControllerCheckoutCheckout extends Controller {
                 }
             }
             $productInCart .= "</tr>";
-        }
+        }*/
 
         // echo $productInCart;
 
-        /**
         foreach ($products as $product){
-        $productInCart .= "<tr>";
-        $productInCart .= "<td>".$product['product_id']."</td>";
-        $productInCart .= "<td>".$product['name']."</td>";
-        $productInCart .= "<td>".$product['model']."</td>";
-        //$productInCart .= "<td>".$product['option']."</td>";
-        $productInCart .= "<td>".$product['quantity']."</td>";
-        //$productInCart .= "<td>".$product['stoke']."</td>";
-        $productInCart .= "<td>".$product['price']."</td>";
-        $productInCart .= "</tr>";
+            $productInCart.= "<tr>";
+            $productInCart.= "<td>".$product['product_id']."</td>";
+            $productInCart.= "<td>".$product['name']."</td>";
+            $productInCart.= "<td>".$product['model']."</td>";
+            $productInCart.= "<td>".$product['price']."</td>";
+            $productInCart.= "<td>".($product['price']*120/100)."</td>";
+            $productInCart.= "<td>".$product['quantity']."</td>";
+            foreach($product['option'] as $param){
+                foreach($param as $val){
+                    $productInCart.= "<td>".$val."</td>";
+                }
+            }
+            $productInCart.= "</tr>";
         }
 
         /**
@@ -267,36 +270,87 @@ class ControllerCheckoutCheckout extends Controller {
          * END обязательные параметры
          */
         $parametrsOrder = '';
-        if(isset($this->request->post['region'])){
+        /**
+         * Функция, проверяющая наличие параметра
+         * @param $param
+         * @param $text
+         * @return string
+         */
+        function issetNotNull ($param, $text){
+            if(isset($param) && $param != ''){
+                return "$text: ".$param."<br>";
+            }
+            return '';
+        }
+
+        /**
+         * Нова пошта склад
+         */
+        $parametrsOrder.= issetNotNull($this->request->post['region'], 'Регіон');
+        $parametrsOrder.= issetNotNull($this->request->post['warehouse_np'], '№ склада');
+        $parametrsOrder.= issetNotNull($this->request->post['city_np'], 'Місто');
+        /**
+         * Нова пошта курьер
+         */
+        $parametrsOrder.= issetNotNull($this->request->post['city'], 'Місто');
+        $parametrsOrder.= issetNotNull($this->request->post['house'], 'Будинок');
+        $parametrsOrder.= issetNotNull($this->request->post['street'], 'Вулиця');
+        $parametrsOrder.= issetNotNull($this->request->post['entrance'], 'Під\'їзд');
+        $parametrsOrder.= issetNotNull($this->request->post['floor'], 'Поверх');
+        $parametrsOrder.= issetNotNull($this->request->post['room'], 'Квартира');
+        /**
+         * Другой вариант
+         */
+        $parametrsOrder.= issetNotNull($this->request->post['name-delivery'], 'Назва перевізника');
+        $parametrsOrder.= issetNotNull($this->request->post['warehouse_ow'], '№ склада');
+        $parametrsOrder.= issetNotNull($this->request->post['city_ow'], 'Місто');
+        $parametrsOrder.= issetNotNull($this->request->post['street_ow'], 'Вулиця');
+        $parametrsOrder.= issetNotNull($this->request->post['house_ow'], 'Будинок');
+        $parametrsOrder.= issetNotNull($this->request->post['room_ow'], 'Квартира');
+        /*if(isset($this->request->post['region']) && $this->request->post['region'] != ''){
             $region = $this->request->post['region'];
             $parametrsOrder.= "Регіон: ".$region."<br>";
         }
 
-        if(isset($this->request->post['name-delivery'])){
+        if(isset($this->request->post['name-delivery']) && $this->request->post['name-delivery'] != ''){
             $nameDelivery = $this->request->post['name-delivery'];
-            $parametrsOrder.= "Регіон: ".$nameDelivery."<br>";
+            $parametrsOrder.= "Назва перевізника: ".$nameDelivery."<br>";
         }
 
-        if(isset($this->request->post['warehouse'])){
-            $warehouse = $this->request->post['warehouse'];
+        if(isset($this->request->post['warehouse_np']) && $this->request->post['warehouse_np'] != ''){
+            $warehouse = $this->request->post['warehouse_np'];
+            $parametrsOrder.= "№ склада: ".$warehouse."<br>";
+        } elseif($this->request->post['warehouse_ow'] && $this->request->post['warehouse_ow'] != ''){
+            $warehouse = $this->request->post['warehouse_ow'];
             $parametrsOrder.= "№ склада: ".$warehouse."<br>";
         }
 
-        if(isset($this->request->post['city'])){
+        if(isset($this->request->post['city_ow']) && $this->request->post['city_ow'] != ''){
+            $city = $this->request->post['city_ow'];
+            $parametrsOrder.= "Місто: ".$city."<br>1";
+        } elseif(isset($this->request->post['city_np']) && $this->request->post['city_np'] != ''){
+            $city = $this->request->post['city_np'];
+            $parametrsOrder.= "Місто: ".$city."<br>2";
+        } elseif (isset($this->request->post['city']) && $this->request->post['city'] != '') {
             $city = $this->request->post['city'];
-            $parametrsOrder.= "Місто: ".$city."<br>";
+            $parametrsOrder.= "Місто: ".$city."<br>3";
         }
 
-        if(isset($this->request->post['street'])){
+        if(isset($this->request->post['street'])&& $this->request->post['street'] != ''){
             $street = $this->request->post['street'];
+            $parametrsOrder.= "Вулиця: ".$street."<br>";
+        } elseif (isset($this->request->post['street_ow'])&& $this->request->post['street_ow'] != ''){
+            $street = $this->request->post['street_ow'];
             $parametrsOrder.= "Вулиця: ".$street."<br>";
         }
 
-        if(isset($this->request->post['house'])){
+        if(isset($this->request->post['house'])&& $this->request->post['house'] != ''){
             $house = $this->request->post['house'];
             $parametrsOrder.= "Будинок: ".$house."<br>";
+        } elseif (isset($this->request->post['house_ow']) && $this->request->post['house_ow'] != ''){
+            $house = $this->request->post['house_ow'];
+            $parametrsOrder.= "Будинок: ".$house."<br>";
         }
-
         if(isset($this->request->post['entrance'])){
             $entrance = $this->request->post['entrance'];
             $parametrsOrder.= "Під'їзд: ".$entrance."<br>";
@@ -310,6 +364,13 @@ class ControllerCheckoutCheckout extends Controller {
         if(isset($this->request->post['room'])){
             $room = $this->request->post['room'];
             $parametrsOrder.= "Квартира: ".$room."<br>";
+        } elseif($this->request->post['room_ow']){
+            $room = $this->request->post['room_ow'];
+            $parametrsOrder.= "Квартира: ".$room."<br>";
+        }*/
+
+        if(isset($this->request->post['comment']) && $this->request->post['comment'] != ''){
+            $comment = $this->request->post['comment'];
         }
 
         $heardLetter = "Заказ товара";
@@ -325,11 +386,21 @@ class ControllerCheckoutCheckout extends Controller {
                     Телефон: $phone;<br>
                     Доставка: $delivery;<br>
                     Метод оплати: $payment;<br>
-                    Параметри відправки:
-                    $parametrsOrder;
+                    Параметри відправки:<br>
+                    $parametrsOrder
                     <table>
-                        $productInCart;
+                    <tr>
+                    <td>Код товару</td>
+                    <td>Назва товару</td>
+                    <td>Модель</td>
+                    <td>Ціна без НДС, грн</td>
+                    <td>Ціна з НДС, грн</td>
+                    <td>Кількість</td>
+                    <td>Параметри</td>
+                    </tr>
+                        $productInCart
                     </table>
+                    Коментарій до заказу: $comment;
                     </p>
                     </body>
                     </html>";
@@ -351,7 +422,6 @@ class ControllerCheckoutCheckout extends Controller {
             $mail->setSubject(html_entity_decode(sprintf($this->language->get('email_subject'), $heardLetter), ENT_QUOTES, 'UTF-8'));
             $mail->setText($letter);
             $mail->send();
-
             $this->response->redirect($this->url->link('information/contact/success'));
         } else {
             echo "Error";
